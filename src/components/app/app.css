@@ -1,0 +1,15 @@
+.fg1 {
+  flex-grow: 1;
+}
+
+.fg0 {
+  flex-grow: 0;
+}
+
+.showOnParentHover {
+  display: none;
+}
+
+:hover > .showOnParentHover {
+  display: inline-block;
+}

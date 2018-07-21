@@ -1,0 +1,55 @@
+{
+  "name": "3d-tour",
+  "version": "0.1.0",
+  "private": false,
+  "description": "A library of components allowing to make 3d tours.",
+  "license": "MIT",
+  "author": {
+    "name": "Vincent Desmares",
+    "email": "vincent.desmares@gmail.com"
+  },
+  "main": "build-lib/index.js",
+  "dependencies": {
+    "@xailabs/three-renderer-stats": "^1.0.4",
+    "babel-preset-stage-0": "^6.24.1",
+    "debug": "^3.1.0",
+    "react-router-redux": "^5.0.0-alpha.9",
+    "three": "^0.94.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "build-lib": "babel --config .babelrc-lib src/lib -d build-lib --presets=es2015,react,stage-0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "eslint": "^5.2.0",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-async-await": "^0.0.0",
+    "eslint-plugin-flowtype": "^2.50.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-react": "^7.10.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "flow-bin": "^0.77.0",
+    "history": "^4.7.2",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-redux": "^5.0.7",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "1.1.4",
+    "redux": "^4.0.0",
+    "redux-form": "^7.4.2",
+    "tachyons": "^4.11.0"
+  },
+  "peerDependencies": {
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
+  }
+}
