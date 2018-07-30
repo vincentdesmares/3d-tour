@@ -1,12 +1,12 @@
-import _debug from 'debug'
-const debug = _debug('scroll')
+import _debug from "debug"
+const debug = _debug("scroll")
 
-export default (renderer, sceneState, gameState, dispatch) => {
+export default (renderer, threeState, sceneState, dispatch) => {
   const onMouseWheel = event => {
     event.preventDefault()
-    debug('Scroll', event)
+    debug("Scroll", event)
     dispatch({
-      type: 'SCROLL_SCREEN',
+      type: "SCROLL_SCREEN",
       payload: {
         deltaY: event.deltaY
       }
@@ -26,30 +26,30 @@ export default (renderer, sceneState, gameState, dispatch) => {
     oldPosY = posY
   }
 
-  renderer.domElement.addEventListener('wheel', onMouseWheel, false)
+  renderer.domElement.addEventListener("wheel", onMouseWheel, false)
   renderer.domElement.addEventListener(
-    'scroll',
+    "scroll",
     () => {
-      debug('end of touch move')
+      debug("end of touch move")
       oldPosY = null
     },
     false
   )
   renderer.domElement.addEventListener(
-    'touchend',
+    "touchend",
     () => {
-      debug('end of touch move')
+      debug("end of touch move")
       oldPosY = null
     },
     false
   )
   renderer.domElement.addEventListener(
-    'touchcancel',
+    "touchcancel",
     () => {
-      debug('end of touch move')
+      debug("end of touch move")
       oldPosY = null
     },
     false
   )
-  renderer.domElement.addEventListener('touchmove', onTouchMove, false)
+  renderer.domElement.addEventListener("touchmove", onTouchMove, false)
 }

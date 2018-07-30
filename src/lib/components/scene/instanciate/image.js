@@ -1,7 +1,7 @@
-import { Mesh, MeshBasicMaterial, PlaneGeometry, ImageUtils } from 'three'
+import { Mesh, MeshBasicMaterial, PlaneGeometry, ImageUtils } from "three"
 
-export default (gameState, scene) => {
-  for (const image of gameState.images) {
+export default (sceneState, scene) => {
+  for (const image of sceneState.images) {
     var mat = new MeshBasicMaterial({
       map: ImageUtils.loadTexture(image.src),
       tranparency: true,
@@ -15,7 +15,7 @@ export default (gameState, scene) => {
 
     groundMesh.name = image.src
 
-    if (typeof image.position.startX !== 'undefined') {
+    if (typeof image.position.startX !== "undefined") {
       geometry.translate(
         image.position.startX,
         image.position.startY,

@@ -1,19 +1,19 @@
-import { Mesh, SphereBufferGeometry, MeshBasicMaterial } from 'three'
+import { Mesh, SphereBufferGeometry, MeshBasicMaterial } from "three"
 
-import Sky from './../object/sky'
+import Sky from "./../object/sky"
 
-export default (renderer, scene, sceneState) => {
+export default (renderer, scene, threeState) => {
   // Add Sky
-  sceneState.sky = new Sky()
-  sceneState.sky.scale.setScalar(450000)
-  scene.add(sceneState.sky)
+  threeState.sky = new Sky()
+  threeState.sky.scale.setScalar(450000)
+  scene.add(threeState.sky)
   // Add Sun Helper
-  sceneState.sunSphere = new Mesh(
+  threeState.sunSphere = new Mesh(
     new SphereBufferGeometry(20000, 16, 8),
     new MeshBasicMaterial({ color: 0xffffff })
   )
-  sceneState.sunSphere.position.y = -700000
-  sceneState.sunSphere.visible = false
-  scene.add(sceneState.sunSphere)
+  threeState.sunSphere.position.y = -700000
+  threeState.sunSphere.visible = false
+  scene.add(threeState.sunSphere)
   /// GUI
 }

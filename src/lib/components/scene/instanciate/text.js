@@ -4,22 +4,22 @@ import {
   Mesh,
   MeshBasicMaterial,
   ShapeGeometry
-} from 'three'
+} from "three"
 
-export default (scene, gameState, font, sceneState) => {
+export default (scene, sceneState, font, threeState) => {
   var text
   var color = 0x000000
-  sceneState.matTransparent = new MeshBasicMaterial({
+  threeState.matTransparent = new MeshBasicMaterial({
     color: color,
     transparent: true,
     opacity: 0,
     side: DoubleSide
   })
 
-  for (const sentence of gameState.sentences) {
+  for (const sentence of sceneState.sentences) {
     var textShape = new BufferGeometry()
     const message =
-      sceneState.width < sceneState.height && sentence.mobileMessage
+      threeState.width < threeState.height && sentence.mobileMessage
         ? sentence.mobileMessage
         : sentence.message
 
@@ -28,17 +28,17 @@ export default (scene, gameState, font, sceneState) => {
     geometry.computeBoundingBox()
 
     if (sentence.rotate) {
-      if (typeof sentence.rotate.x !== 'undefined') {
+      if (typeof sentence.rotate.x !== "undefined") {
         geometry.rotateX(sentence.rotate.x)
       }
-      if (typeof sentence.rotate.y !== 'undefined') {
+      if (typeof sentence.rotate.y !== "undefined") {
         geometry.rotateY(sentence.rotate.y)
       }
-      if (typeof sentence.rotate.z !== 'undefined') {
+      if (typeof sentence.rotate.z !== "undefined") {
         geometry.rotateZ(sentence.rotate.z)
       }
     }
-    if (sceneState.width < sceneState.height && sentence.mobilePosition) {
+    if (threeState.width < threeState.height && sentence.mobilePosition) {
       geometry.translate(
         sentence.mobilePosition.x,
         sentence.mobilePosition.y,
@@ -55,7 +55,7 @@ export default (scene, gameState, font, sceneState) => {
     // make shape ( N.B. edge view not visible )
     textShape.fromGeometry(geometry)
     if (sentence.displayAfterScrollStart) {
-      text = new Mesh(textShape, sceneState.matTransparent)
+      text = new Mesh(textShape, threeState.matTransparent)
     } else {
       var matLite = new MeshBasicMaterial({
         color: sentence.color || color,
@@ -66,9 +66,9 @@ export default (scene, gameState, font, sceneState) => {
 
     text.position.z = 1
 
-    if (typeof sentence.action !== 'undefined') {
+    if (typeof sentence.action !== "undefined") {
       text.name = `action@${sentence.action}`
-      sceneState.intersectables.push(text)
+      threeState.intersectables.push(text)
     } else {
       text.name = sentence.message
     }

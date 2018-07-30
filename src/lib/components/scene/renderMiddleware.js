@@ -11,20 +11,20 @@ import {
   Vector3,
   WebGLRenderer,
   Color
-} from 'three'
-import _debug from 'debug'
-import RendererStats from '@xailabs/three-renderer-stats'
+} from "three"
+import _debug from "debug"
+import RendererStats from "@xailabs/three-renderer-stats"
 
-import OrbitControls from './orbitControls'
-import GPUParticleSystem from './GPUParticleSystem'
-import Stats from './stats'
-import registerClickEvent from './events/click'
-import registerScrollEvent from './events/scroll'
-import instantiateCurves from './instanciate/curve'
-import instanciateImages from './instanciate/image'
-import instanciateTexts from './instanciate/text'
+import OrbitControls from "./orbitControls"
+import GPUParticleSystem from "./GPUParticleSystem"
+import Stats from "./stats"
+import registerClickEvent from "./events/click"
+import registerScrollEvent from "./events/scroll"
+import instantiateCurves from "./instanciate/curve"
+import instanciateImages from "./instanciate/image"
+import instanciateTexts from "./instanciate/text"
 
-const debug = _debug('renderMiddleware')
+const debug = _debug("renderMiddleware")
 let scene, renderer
 let rendererStats, stats
 
@@ -32,7 +32,7 @@ var particleSystem
 
 var INTERSECTED
 
-var sceneState = {
+var threeState = {
   camera: null,
   world: {},
   mouse: new Vector2(),
@@ -43,39 +43,43 @@ var sceneState = {
   intersectables: []
 }
 
-function init (width, height, sceneState, gameState, dispatch) {
-  sceneState.width = width
-  sceneState.height = height
+function init(width, height, threeState, sceneState, dispatch) {
+  threeState.width = width
+  threeState.height = height
 
-  function onDocumentMouseMove (event) {
+  function onDocumentMouseMove(event) {
     event.preventDefault()
-    sceneState.mouse.x = (event.clientX / width) * 2 - 1
-    sceneState.mouse.y = -(event.clientY / height) * 2 + 1
+    threeState.mouse.x = (event.clientX / width) * 2 - 1
+    threeState.mouse.y = -(event.clientY / height) * 2 + 1
   }
 
-  debug('Init the scene')
+  debug("Init the scene")
   rendererStats = new RendererStats()
   stats = new Stats()
-  sceneState.camera = new PerspectiveCamera(40, width / height, 0.01, 3000)
-  sceneState.camera.aspect = width / height
-  sceneState.camera.updateProjectionMatrix()
-  sceneState.camera.position.x = gameState.camera.position.x
-  sceneState.camera.position.y = gameState.camera.position.y
-  sceneState.camera.position.z = gameState.camera.position.z
-  sceneState.camera.lookAt(
+  threeState.camera = new PerspectiveCamera(40, width / height, 0.01, 3000)
+  threeState.camera.aspect = width / height
+  threeState.camera.updateProjectionMatrix()
+  if (sceneState.camera) {
+    threeState.camera.position.x = sceneState.camera.position.x
+    threeState.camera.position.y = sceneState.camera.position.y
+    threeState.camera.position.z = sceneState.camera.position.z
+  } else {
+    debug("Camera position is missing.")
+  }
+  threeState.camera.lookAt(
     new Vector3(
-      gameState.camera.lookAt.x,
-      gameState.camera.lookAt.y,
-      gameState.camera.lookAt.z
+      sceneState.camera.lookAt.x,
+      sceneState.camera.lookAt.y,
+      sceneState.camera.lookAt.z
     )
   )
 
   scene = new Scene()
   // To allow debug through extensions
   window.scene = scene
-  window.THREE = require('three')
+  window.THREE = require("three")
 
-  if (localStorage.debug === '*') {
+  if (localStorage.debug === "*") {
     var gridHelper = new GridHelper(100, 100)
     gridHelper.position.y = -0.5
     scene.add(gridHelper)
@@ -84,8 +88,8 @@ function init (width, height, sceneState, gameState, dispatch) {
   }
 
   var loaderf = new FontLoader()
-  loaderf.load('/assets/fonts/helvetiker_regular.typeface.json', f =>
-    instanciateTexts(scene, gameState, f, sceneState)
+  loaderf.load("/assets/fonts/helvetiker_regular.typeface.json", f =>
+    instanciateTexts(scene, sceneState, f, threeState)
   )
 
   particleSystem = new GPUParticleSystem({
@@ -114,52 +118,52 @@ function init (width, height, sceneState, gameState, dispatch) {
   light2.position.set(-1, 200, 1)
   scene.add(light2)
 
-  sceneState.raycaster = new Raycaster()
-  sceneState.raycaster.far = 400
-  sceneState.raycaster.near = 1
+  threeState.raycaster = new Raycaster()
+  threeState.raycaster.far = 400
+  threeState.raycaster.near = 1
 
-  if (localStorage.debug === '*') {
-    instantiateCurves(scene, gameState)
-    const controls = new OrbitControls(sceneState.camera, renderer.domElement)
+  if (localStorage.debug === "*") {
+    instantiateCurves(scene, sceneState)
+    const controls = new OrbitControls(threeState.camera, renderer.domElement)
     controls.target.set(0, 20, 0)
     controls.update()
   }
 
-  instanciateImages(gameState, scene)
+  instanciateImages(sceneState, scene)
 
-  while (document.getElementById('scene').lastChild) {
+  while (document.getElementById("scene").lastChild) {
     document
-      .getElementById('scene')
-      .removeChild(document.getElementById('scene').lastChild)
+      .getElementById("scene")
+      .removeChild(document.getElementById("scene").lastChild)
   }
-  document.getElementById('scene').appendChild(renderer.domElement)
-  rendererStats.domElement.style.position = 'absolute'
-  rendererStats.domElement.style.left = '0px'
-  rendererStats.domElement.style.bottom = '0px'
-  if (localStorage.debug === '*') {
-    document.getElementById('scene').appendChild(rendererStats.domElement)
+  document.getElementById("scene").appendChild(renderer.domElement)
+  rendererStats.domElement.style.position = "absolute"
+  rendererStats.domElement.style.left = "0px"
+  rendererStats.domElement.style.bottom = "0px"
+  if (localStorage.debug === "*") {
+    document.getElementById("scene").appendChild(rendererStats.domElement)
     stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.getElementById('scene').appendChild(stats.dom)
+    document.getElementById("scene").appendChild(stats.dom)
   }
-  document.addEventListener('mousemove', onDocumentMouseMove, false)
+  document.addEventListener("mousemove", onDocumentMouseMove, false)
 
-  registerClickEvent(renderer, sceneState, gameState, dispatch)
-  registerScrollEvent(renderer, sceneState, gameState, dispatch)
+  registerClickEvent(renderer, threeState, sceneState, dispatch)
+  registerScrollEvent(renderer, threeState, sceneState, dispatch)
 }
 
-const updatesceneState = state => {
+const updatethreeState = state => {
   if (state.nextScreen !== null) {
-    sceneState.camera.position.x = state.camera.position.x
-    sceneState.camera.position.y = state.camera.position.y
-    sceneState.camera.position.z = state.camera.position.z
-    sceneState.camera.lookAt(
+    threeState.camera.position.x = state.camera.position.x
+    threeState.camera.position.y = state.camera.position.y
+    threeState.camera.position.z = state.camera.position.z
+    threeState.camera.lookAt(
       new Vector3(
         state.camera.lookAt.x,
         state.camera.lookAt.y,
         state.camera.lookAt.z
       )
     )
-    sceneState.camera.updateMatrixWorld()
+    threeState.camera.updateMatrixWorld()
   }
 }
 
@@ -174,8 +178,8 @@ const animate = (gameLoop, store) => {
     gameLoop(deltaTime, creationTime)
   }
 
-  sceneState.raycaster.setFromCamera(sceneState.mouse, sceneState.camera)
-  var intersects = sceneState.raycaster.intersectObjects(scene.children)
+  threeState.raycaster.setFromCamera(threeState.mouse, threeState.camera)
+  var intersects = threeState.raycaster.intersectObjects(scene.children)
   if (intersects.length > 0) {
     if (INTERSECTED !== intersects[0].object) {
       debug(`Found something`, intersects[0].object.name)
@@ -194,16 +198,16 @@ const animate = (gameLoop, store) => {
     INTERSECTED = null
   }
 
-  const state = store.getState().tour
-  if (sceneState.matTransparent) {
-    if (state.screen === 'landing') {
-      sceneState.matTransparent.opacity = state.nextScreenPercentTraveled
+  const state = store.getState().scene
+  if (threeState.matTransparent) {
+    if (state.screen === "landing") {
+      threeState.matTransparent.opacity = state.nextScreenPercentTraveled
     } else {
-      sceneState.matTransparent.opacity = 1
+      threeState.matTransparent.opacity = 1
     }
   }
 
-  renderer.render(scene, sceneState.camera)
+  renderer.render(scene, threeState.camera)
   rendererStats.update(renderer)
   stats.end()
   lastTime = creationTime
@@ -214,25 +218,25 @@ var lastTime = Date.now()
 
 export default store => {
   return next => action => {
-    if (action.type === 'SCENE_INIT') {
+    if (action.type === "SCENE_INIT") {
       next(action)
       init(
         action.payload.width,
         action.payload.height,
-        sceneState,
-        store.getState().tour,
+        threeState,
+        store.getState().scene,
         store.dispatch
       )
       animate((deltaTime, creationTime) => {
         store.dispatch({
-          type: 'RENDER_LOOP',
+          type: "RENDER_LOOP",
           deltaTime,
           creationTime
         })
       }, store)
     }
-    if (action.type === 'RENDER_LOOP') {
-      updatesceneState(store.getState().tour)
+    if (action.type === "RENDER_LOOP") {
+      updatethreeState(store.getState().scene)
     }
 
     return next(action)

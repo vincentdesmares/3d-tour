@@ -4,7 +4,7 @@ import {
   BufferGeometry,
   LineBasicMaterial,
   Line
-} from 'three'
+} from "three"
 
 const createCurve = (scene, path, name) => {
   var curve = new QuadraticBezierCurve3(
@@ -20,9 +20,9 @@ const createCurve = (scene, path, name) => {
   scene.add(curveObject)
 }
 
-export default (scene, gameState) => {
-  for (const screenId in gameState.screens) {
-    const screen = gameState.screens[screenId]
+export default (scene, sceneState) => {
+  for (const screenId in sceneState.screens) {
+    const screen = sceneState.screens[screenId]
     for (const pathId in screen.paths) {
       const path = screen.paths[pathId].position
       createCurve(scene, path, `${screenId}-${pathId}`)

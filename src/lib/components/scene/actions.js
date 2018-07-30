@@ -25,7 +25,9 @@ export default (state: Object = initialState, action: Object = {}): Object => {
   let newState = { ...state }
   switch (action.type) {
     case "SCENE_INIT":
-      return initialState
+      return action.payload.initialState
+        ? { ...initialState, ...action.payload.initialState }
+        : initialState
     case "SWITCH_SCREEN":
       newState.nextScreen = action.payload.screen
       newState.nextScreenPercentTraveled = 0
